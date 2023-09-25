@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using TODOList.Interfaces;
+using TODOList.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +10,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContextPool<TodoDbContext>(options =>
+    options.UseMySql(builder.Configuration["ConnectionStrings:DefaultConnection"], ServerVersion.Parse("8.0.34-mysql"))
+);
+
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 
 var app = builder.Build();
 
